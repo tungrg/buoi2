@@ -3,14 +3,14 @@
 //  DemoLinkedList
 //
 //  Created by TungDT on 7/10/20.
-//  Copyright © 2020 macOne. All rights reserved.
+//  Copyright ï¿½ 2020 macOne. All rights reserved.
 //
  
 #include "linked_list.h"
 #include "menu.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include<string.h>
+#include <string.h>
  
 node* create_node(const Data data)
 {
@@ -32,15 +32,27 @@ void add(node **head, const Data data)
     	*head = n;
 	} else {
 		node** iter = head;
-		while(*iter.next != NULL && *iter.data.price < data.price) {
-			iter = iter.next;
+		if ((*iter)->data.price > data.price) {
+			push(head, n);
+			return;
 		}
-        insert_after(iter, n);
+		node* temp = *head;
+		while(temp->next != NULL && temp->data.price < data.price) {
+			temp = temp->next;
+		}
+        insert_after(temp, n);
     }
 }
 
-
-void insert_after(node** prev, node* new_node) {
+void push(node** head, node* new_node) {
+	new_node->next = *head;
+	new_node->prev = NULL;
+	if (*head != NULL) {
+		(*head)->prev = new_node;
+	}
+	*head = new_node;
+}
+void insert_after(node* prev, node* new_node) {
 	new_node->next = prev->next;
 	prev->next = new_node;
 	new_node->prev = prev;
@@ -49,55 +61,66 @@ void insert_after(node** prev, node* new_node) {
 	}
 }
 
+
+
 void remove_node (node** head, node* target) {
 	if(*head == NULL || target == NULL) {
 		return;
 	}
 	if(*head == target) {
-		*head = target.next;
+		*head = target->next;
 	}
-	if (target.next != NULL) {
-		target.next.prev = target.prev;
+	if (target->next != NULL) {
+		target->next->prev = target->prev;
 	}
-	if(target.prev != NULL) {
-		target.prev.next = target.next;
+	if(target->prev != NULL) {
+		target->prev->next = target->next;
 	}
 	free(target);
 }
 
-node* find_by_id(node* const head, char[] id) {
+node* find_by_id(node* const head, char id[]) {
 	node* p = head;
-	while(p!= null) {
-		if (!strcmp(p.data.id,id)) {
+	while(p!= NULL) {
+		if (!strcmp(p->data.id,id)) {
 			return p;
 		}
-		head = p.next;
+		p = p->next;
 	}
+	return NULL;
 }
 
 node* find_by_price(node* const head, int price) {
 	node* p = head;
 	while(p != NULL) {
-		if (p.data.price < price) {
-			if (abs(p.prev.data.price - price) < abs(p.prev.data.price - price)){
-				return p.prev;
+		if (p->data.price < price) {
+			if (abs(p->prev->data.price - price) < abs(p->prev->data.price - price)){
+				return p->prev;
 			}
 			return p;
 		}
-		p = p.next;
+		p = p->next;
 	}
 }
 
-void print_list_recursive(node* head, bool increasing) {
+void print_product_info(node* arg) {
+	printf("-------------------------------------------\n");
+	printf(" - Ma san pham: %s\n", arg->data.id);
+	printf(" - Ten san pham: %s\n", arg->data.name);
+	printf(" - Gia ban: %d\n", arg->data.price);
+	printf(" - So luong ton kho: %d\n", arg->data.stock);
+}
+
+void print_list_recursive(node* head, int increasing) {
 	if (is_empty(head)) {
 		return;
 	}
 	if (increasing) {
-		print_product_info(node* head);		
+		print_product_info(head);		
 	}
-	print_list_recursive(head.next)
+	print_list_recursive(head->next,increasing);
 	if (!increasing) {
-		print_product_info(node* head);		
+		print_product_info(head);	
 	}
 }
 
