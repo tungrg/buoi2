@@ -36,6 +36,6 @@ node* find_by_price(node* const head, int price);
 void print_product_info(node* arg);
 void print_list_recursive(node* head, int increasing);
 void push(node** head, node* new_node);
-void insert_after(node** prev, node* new_node);
+void insert_after(node* prev, node* new_node);
  
 #endif /* linked_list_h */
